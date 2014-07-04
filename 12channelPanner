@@ -1,0 +1,57 @@
+/*******************************************************************************
+*  Copyright 2014, Florian Goltz                                               *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:12 channel panner
+
+slider1:0<0,3,1{1,2,3,4,5,6,7,8,9,10,11,12,all}>Input source
+slider2:1<1,24,0.01>Pos
+
+@init
+
+channels = 12;
+
+@slider
+
+i = 0;
+loop(channels,
+  diff = abs(i - slider2 + 1);
+  diff >= 1 ? (
+    amp[i] = 0;
+  ) : (
+    i < slider2 ? (
+      amp[i] = 1 - diff;
+    ) : (
+      amp[i] = diff;
+    );
+  );
+  i += 1;
+)
+
+@sample  
+
+(slider1 >= channels) ? (  
+  i = 0;
+  loop(channels,
+    spl(i) =  amp[i] * spl[i]; 
+    i += 1;
+  );
+) : (
+  in = spl(slider1); 
+  i = 0;
+  loop(channels,
+    spl(i) =  amp[i] * in; 
+    i += 1;
+  );
+)
+
+
