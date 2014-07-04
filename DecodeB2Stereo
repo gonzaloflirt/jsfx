@@ -1,0 +1,40 @@
+/*******************************************************************************
+*  Copyright 2014, Florian Goltz                                               *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:B-Format to Stereo Decoder
+
+slider1:0 <-1, 1> Mic Pattern
+slider2:0 <-180, 180> Angle
+
+@slider
+
+mic_b = (slider1 + 1) * 0.5;
+mic_a = (mic_b * -1) + 1;
+angle = slider2 / 180 * $pi;
+cos_angle = cos(angle);
+sin_angle = sin(angle);
+
+@sample  
+
+w_in = spl0;
+x_in = spl1;
+y_in = spl2;
+z_in = spl4;
+
+l = (x_in * cos_angle) - (y_in * sin_angle);
+r = (x_in * sin_angle) + (y_in * cos_angle);
+spl0 = (mic_a * w_in) + (mic_b * l);
+spl1 = (mic_a * w_in) + (mic_b * r);
+spl2 = 0;
+spl3 = 0;
+
