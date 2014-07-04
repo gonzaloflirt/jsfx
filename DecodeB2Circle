@@ -1,0 +1,53 @@
+/*******************************************************************************
+*  Copyright 2014, Florian Goltz                                               *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:B-Format to Circle Decoder
+
+slider1:0<-180,180,0.01>Orientation
+
+@init
+
+function setup() (
+  ang = $pi * 2 / num_ch;
+  cos_a = cos(ang);
+  sin_a = sin(ang);
+  w_amp = 0.7071067811865476;
+);
+
+setup();
+
+@serialize
+
+setup();
+
+@slider
+
+offset = slider1 / 180 * $pi;
+x_amp_ref = 0.5 * cos(ang + offset);
+y_amp_ref = 0.5 * sin(ang + offset);
+
+@sample  
+
+w_in = spl0;
+x_in = spl1;
+y_im = spl2;
+x_amp = x_amp_ref;
+y_amp = y_amp_ref;
+i = 0;
+loop(num_ch,
+  spl(i) = (w_in * w_amp) + (x_in * x_amp) + (y_in * y_amp);
+  x_tmp = (x_amp * cos_a) + (y_amp * sin_a);
+  y_amp = (y_amp * cos_a) - (x_amp * sin_a);
+  x_amp = x_tmp;
+  i += 1;
+);
