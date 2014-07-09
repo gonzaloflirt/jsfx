@@ -1,0 +1,32 @@
+/*******************************************************************************
+*  Copyright 2014, Florian Goltz                                               *
+*  This program is free software: you can redistribute it and/or modify        *
+*  it under the terms of the GNU General Public License as published by        *
+*  the Free Software Foundation, either version 3 of the License, or           *
+*  (at your option) any later version.                                         *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+*  GNU General Public License (http://www.gnu.org/licenses/)for more details.  *
+*******************************************************************************/
+
+desc:Mono to B-Format Encoder
+
+slider1:0 <-180, 180> Angle
+
+@slider
+
+angle = slider1 / 180 * $pi;
+cos_angle = cos(angle);
+sin_angle = sin(angle);
+
+@sample  
+
+in = spl0;
+
+spl0 = in / 1.414213562373095;
+spl1 = in * cos_angle;
+spl2 = in * sin_angle;
+spl3 = 0;
+
